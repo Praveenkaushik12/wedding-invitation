@@ -458,7 +458,7 @@ section{padding:48px 24px;position:relative}
 <!-- Audio Player -->
 <audio id="bgMusic" loop preload="auto">
   <source src="music.mp3" type="audio/mpeg">
-  <source src="https://archive.org/download/dli.akashvani.sangeet.24/2%20Poorvi%20Dhun.mp3" type="audio/mpeg">
+  <source src="https://ia600900.us.archive.org/24/items/dni.ncaa.ICCR-1266-AC/ICCR-1266-AC_SIDE_A.mp3" type="audio/mpeg">
 </audio>
 
 <!-- Floating Music Control -->
@@ -676,7 +676,7 @@ let isMusicPlaying = false;
 
 function startMusic(){
   if (!bgAudio) return;
-  bgAudio.volume = 0.55;
+  bgAudio.volume = 0.38;
   const playPromise = bgAudio.play();
   if (playPromise !== undefined) {
     playPromise.then(() => {
@@ -700,7 +700,7 @@ function toggleMusic(){
     if (mBtn) mBtn.classList.remove('playing');
     if (mIcon) mIcon.textContent = '🔇';
   } else {
-    bgAudio.volume = 0.55;
+    bgAudio.volume = 0.38;
     bgAudio.play().then(() => {
       isMusicPlaying = true;
       if (mBtn) mBtn.classList.add('playing');
