@@ -73,30 +73,45 @@ body{
 }
 
 /* Envelope */
-.env-box{position:relative;width:270px;height:310px;cursor:pointer;z-index:2;margin-bottom:20px}
-.env-box:active{transform:scale(.97)}
+/* Unified Realistic Envelope */
+.env-box{
+  position:relative;width:280px;height:195px;
+  cursor:pointer;z-index:2;margin-bottom:28px;
+  border-radius:8px;
+  box-shadow:0 18px 45px rgba(0,0,0,.45);
+  transition:transform .3s ease;
+}
+.env-box:active{transform:scale(.98)}
 
+/* Envelope Back */
 .e-body{
-  position:absolute;bottom:0;width:270px;height:185px;
-  background:linear-gradient(145deg,#F5E6B8 20%,#E8D5A0);
-  border-radius:0 0 6px 6px;border:2px solid var(--gold);border-top:none;
-  box-shadow:0 20px 50px rgba(0,0,0,.45);z-index:2;
+  position:absolute;inset:0;
+  background:linear-gradient(145deg,#E8D5A0 0%,#DFC890 100%);
+  border-radius:8px;border:2px solid var(--gold);
+  z-index:1;overflow:hidden;
 }
-.e-body::after{content:'';position:absolute;inset:7px;border:1px solid rgba(212,167,58,.25);border-radius:2px}
 
-.e-flap{
-  position:absolute;top:0;left:0;width:270px;height:170px;
-  transform-origin:top center;z-index:4;
-  transition:transform .7s cubic-bezier(.4,0,.2,1);
+/* Pocket folds (left, right, bottom) */
+.e-pocket{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
 }
-.e-flap svg{width:100%;height:100%;filter:drop-shadow(0 3px 5px rgba(0,0,0,.1))}
+.e-pocket svg{width:100%;height:100%;display:block}
+
+/* Top Flap */
+.e-flap{
+  position:absolute;top:0;left:0;width:280px;height:112px;
+  transform-origin:top center;z-index:5;
+  transition:transform .75s cubic-bezier(.4,0,.2,1);
+}
+.e-flap svg{width:100%;height:100%;display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,.15))}
 .env-box.opened .e-flap{transform:rotateX(180deg)}
 
+/* Wax Seal */
 .e-seal{
-  position:absolute;top:100px;left:50%;transform:translateX(-50%);z-index:5;
-  width:78px;height:78px;border-radius:50%;
+  position:absolute;top:72px;left:50%;transform:translateX(-50%);z-index:6;
+  width:76px;height:76px;border-radius:50%;
   background:radial-gradient(circle at 35% 35%,#E85A5A,#8B1A1A 60%,#4E0808);
-  box-shadow:0 6px 20px rgba(0,0,0,.55),inset 0 2px 6px rgba(255,255,255,.2),0 0 0 2px rgba(212,167,58,.3);
+  box-shadow:0 6px 20px rgba(0,0,0,.55),inset 0 2px 6px rgba(255,255,255,.25),0 0 0 2px rgba(212,167,58,.35);
   display:flex;align-items:center;justify-content:center;gap:3px;
   color:var(--gold-light);
   transition:transform .5s ease .1s,opacity .4s ease .1s;
@@ -107,11 +122,12 @@ body{
 .seal-heart{font-size:15px;color:#FF9E9E;line-height:1;margin:0 2px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
 .env-box.opened .e-seal{transform:translateX(-50%) scale(0) rotate(180deg);opacity:0}
 
+/* Letter inside */
 .e-letter{
-  position:absolute;bottom:8px;left:50%;transform:translateX(-50%) scale(0.96);
-  width:248px;height:165px;
+  position:absolute;top:14px;left:16px;
+  width:248px;height:166px;
   background:linear-gradient(135deg,#FFFDF7 0%,#FFF5E4 30%,#FFE4D3 70%,#FFD7DF 100%);
-  border-radius:10px;z-index:1;
+  border-radius:10px;z-index:2;
   border:2px solid var(--gold);
   box-shadow:0 -2px 10px rgba(0,0,0,.08);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -123,8 +139,8 @@ body{
   border:1.5px solid rgba(139,26,26,.3);pointer-events:none;
 }
 .env-box.opened .e-letter{
-  z-index:20;
-  transform:translateX(-50%) translateY(-145px) scale(1.15);
+  z-index:25;
+  transform:translateY(-165px) scale(1.14);
   box-shadow:0 24px 50px rgba(0,0,0,.55),0 0 35px rgba(212,167,58,.4);
 }
 .el-badge{
@@ -404,6 +420,12 @@ section{padding:48px 24px;position:relative}
 .rv.vis{opacity:1;transform:translateY(0)}
 
 @media(max-width:360px){section{padding:36px 16px}.cd-box{min-width:46px}.cd-n{font-size:24px}}
+
+.cal-icon{
+  width:18px;height:18px;vertical-align:-3px;display:inline-block;
+  margin-right:6px;stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
 </style>
 </head>
 <body>
@@ -434,18 +456,26 @@ section{padding:48px 24px;position:relative}
     </div>
   </div>
 
-  <div class="env-box" id="env" role="button" aria-label="Tap to open">
+    <div class="env-box" id="env" role="button" aria-label="Tap to open">
+    <!-- Flap -->
     <div class="e-flap">
-      <svg viewBox="0 0 270 170" fill="none">
-        <path d="M1 1 L135 128 L269 1 Z" fill="url(#fg)" stroke="#D4A73A" stroke-width="1.5"/>
-        <defs><linearGradient id="fg" x1="0" y1="0" x2="270" y2="170">
-          <stop offset="0%" stop-color="#F5E6B8"/><stop offset="100%" stop-color="#E0CFA0"/>
-        </linearGradient></defs>
-        <path d="M65 32 Q115 72 135 86 Q155 72 205 32" stroke="rgba(139,26,26,0.08)" fill="none" stroke-width="1"/>
+      <svg viewBox="0 0 280 112" fill="none">
+        <defs>
+          <linearGradient id="flapGrad" x1="0" y1="0" x2="280" y2="112">
+            <stop offset="0%" stop-color="#FCEFD2"/>
+            <stop offset="100%" stop-color="#EBD59E"/>
+          </linearGradient>
+        </defs>
+        <polygon points="0,0 280,0 140,108" fill="url(#flapGrad)" stroke="#D4A73A" stroke-width="1.5"/>
+        <path d="M50,15 Q140,82 230,15" stroke="rgba(139,26,26,0.12)" fill="none" stroke-width="1"/>
+        <path d="M80,10 Q140,60 200,10" stroke="rgba(212,167,58,0.25)" fill="none" stroke-width="1"/>
       </svg>
     </div>
+
+    <!-- Envelope Back -->
     <div class="e-body"></div>
-    <div class="e-seal"><span class="seal-init">K</span><span class="seal-heart">&#9829;</span><span class="seal-init">V</span></div>
+
+    <!-- Letter Inside -->
     <div class="e-letter">
       <div class="el-badge">
         <span class="el-om">&#2384;</span>
@@ -460,6 +490,33 @@ section{padding:48px 24px;position:relative}
       <div class="el-date">10 &mdash; 11 DEC 2026</div>
       <div class="el-venue">Green Heaven Resort, Arrah</div>
     </div>
+
+    <!-- Front Pocket Folds (Left, Right, Bottom) -->
+    <div class="e-pocket">
+      <svg viewBox="0 0 280 195" fill="none">
+        <defs>
+          <linearGradient id="pLeft" x1="0" y1="0" x2="140" y2="105">
+            <stop offset="0%" stop-color="#F6E7BC"/>
+            <stop offset="100%" stop-color="#E8D29C"/>
+          </linearGradient>
+          <linearGradient id="pRight" x1="280" y1="0" x2="140" y2="105">
+            <stop offset="0%" stop-color="#F2E0B4"/>
+            <stop offset="100%" stop-color="#E2CC94"/>
+          </linearGradient>
+          <linearGradient id="pBottom" x1="140" y1="195" x2="140" y2="95">
+            <stop offset="0%" stop-color="#F9EBC8"/>
+            <stop offset="100%" stop-color="#EBD5A0"/>
+          </linearGradient>
+        </defs>
+        <polygon points="0,0 140,105 0,195" fill="url(#pLeft)" stroke="#D4A73A" stroke-width="1"/>
+        <polygon points="280,0 140,105 280,195" fill="url(#pRight)" stroke="#D4A73A" stroke-width="1"/>
+        <polygon points="0,195 140,95 280,195" fill="url(#pBottom)" stroke="#D4A73A" stroke-width="1.2"/>
+        <path d="M12,185 L140,98 L268,185" stroke="rgba(139,26,26,0.1)" fill="none" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- Wax Seal on top -->
+    <div class="e-seal"><span class="seal-init">K</span><span class="seal-heart">&#9829;</span><span class="seal-init">V</span></div>
   </div>
   <div class="e-title">You're Invited</div>
   <div class="e-hint">Tap the envelope</div>
@@ -497,7 +554,7 @@ section{padding:48px 24px;position:relative}
   <section class="ev-sec">
     <div class="stitle rv">Wedding Events</div>
     <div class="timeline rv">
-      <div class="tl-date">📅 10 December, 2026</div>
+      <div class="tl-date"><svg class="cal-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>10 December, 2026</div>
       <div class="tl-card">
         <div class="tl-icon mi">🌿</div>
         <div class="tl-info"><div class="tl-name">Mehendi</div><div class="tl-time">🕚 11:00 AM</div></div>
@@ -506,7 +563,7 @@ section{padding:48px 24px;position:relative}
         <div class="tl-icon ti">🔱</div>
         <div class="tl-info"><div class="tl-name">Tilak</div><div class="tl-time">🕖 7:00 PM</div></div>
       </div>
-      <div class="tl-date" style="margin-top:16px">📅 11 December, 2026</div>
+      <div class="tl-date" style="margin-top:16px"><svg class="cal-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>11 December, 2026</div>
       <div class="tl-card">
         <div class="tl-icon hi">💛</div>
         <div class="tl-info"><div class="tl-name">Haldi</div><div class="tl-time">🕗 8:00 AM</div></div>
@@ -546,7 +603,7 @@ section{padding:48px 24px;position:relative}
       <div class="va">HJ6P+CGM, Chandawa<br>Arrah, Bihar 802301</div>
       <div class="btn-row">
         <a href="https://share.google/Zq1WT0muFFoOQqUr1" target="_blank" rel="noopener" class="btn1">📍 Open in Maps</a>
-        <button class="btn2" onclick="addCal()">📅 Add to Calendar</button>
+        <button class="btn2" onclick="addCal()"><svg class="cal-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Add to Calendar</button>
       </div>
     </div>
   </section>
