@@ -715,12 +715,21 @@ function initSnowfall() {
 // ENVELOPE
 const ent=document.getElementById('entry'),env=document.getElementById('env');
 document.body.style.overflow='hidden';
-env.addEventListener('click',()=>{
-  playAudioSafely();
-  initSnowfall();
-  startMusic();
+// Alias for backwards compatibility
+function startMusic() { playAudioSafely(); }
+
+env.addEventListener('click', () => {
+  try { playAudioSafely(); } catch (e) { console.error(e); }
+  try { initSnowfall(); } catch (e) { console.error(e); }
+  
   env.classList.add('opened');
-  setTimeout(()=>{ent.classList.add('hide');document.body.style.overflow='';initRv();startCD()},1700);
+  
+  setTimeout(() => {
+    ent.classList.add('hide');
+    document.body.style.overflow = '';
+    try { initRv(); } catch (e) {}
+    try { startCD(); } catch (e) {}
+  }, 1600);
 });
 
 // GOLD PARTICLES
